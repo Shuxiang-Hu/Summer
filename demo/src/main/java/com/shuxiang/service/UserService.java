@@ -1,2 +1,6 @@
-package com.shuxiang.service.impl;public class UserService {
+package com.shuxiang.service;
+
+public interface UserService {
+
+    void queryUserInfo();
 }
