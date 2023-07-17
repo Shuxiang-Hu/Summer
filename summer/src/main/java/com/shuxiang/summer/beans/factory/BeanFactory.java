@@ -1,4 +1,4 @@
-package com.shuxiang.summer.beans.factory.config;
+package com.shuxiang.summer.beans.factory;
 
 import com.shuxiang.summer.beans.BeansException;
 import com.shuxiang.summer.beans.factory.config.BeanDefinition;
@@ -11,6 +11,7 @@ public interface BeanFactory {
 
 
 
-    public Object getBean(String name) throws BeansException;
+    public Object getBean(String beanName) throws BeansException;
 
+    public Object getBean(String beanName, Object ... args) throws BeansException;
 }

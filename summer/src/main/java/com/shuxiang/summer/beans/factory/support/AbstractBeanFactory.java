@@ -2,19 +2,28 @@ package com.shuxiang.summer.beans.factory.support;
 
 import com.shuxiang.summer.beans.BeansException;
 import com.shuxiang.summer.beans.factory.config.BeanDefinition;
-import com.shuxiang.summer.beans.factory.config.BeanFactory;
+import com.shuxiang.summer.beans.factory.BeanFactory;
 import com.shuxiang.summer.beans.factory.config.DefaultSingletonBeanRegistry;
 
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
     @Override
     public Object getBean(String beanName) {
-        Object singleton = this.getSingleton(beanName);
-        if(singleton != null){
-            return singleton;
+        return doGetBean(beanName,null);
+    }
+
+    @Override
+    public Object getBean(String beanName, Object... args) throws BeansException {
+        return doGetBean(beanName,args);
+    }
+
+    protected <T> T doGetBean(final String name, final Object[] args) {
+        Object bean = getSingleton(name);
+        if (bean != null) {
+            return (T) bean;
         }
 
-        BeanDefinition beanDefinition = getBeanDefinition(beanName);
-        return createBean(beanName,beanDefinition);
+        BeanDefinition beanDefinition = getBeanDefinition(name);
+        return (T) createBean(name, beanDefinition, args);
     }
 
     /**
@@ -28,5 +37,5 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @param beanDefinition definition for the bean
      * @throws BeansException exception related to bean
      */
-    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition) throws BeansException;
+    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException;
 }
