@@ -3,7 +3,6 @@ package com.shuxiang.summer.beans.factory.support;
 import com.shuxiang.summer.beans.BeansException;
 import com.shuxiang.summer.beans.factory.config.BeanDefinition;
 import com.shuxiang.summer.beans.factory.BeanFactory;
-import com.shuxiang.summer.beans.factory.config.DefaultSingletonBeanRegistry;
 
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
     @Override

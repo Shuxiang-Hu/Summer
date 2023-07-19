@@ -1,7 +1,10 @@
 package com.shuxiang.summer.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.shuxiang.summer.beans.BeansException;
+import com.shuxiang.summer.beans.PropertyValue;
 import com.shuxiang.summer.beans.factory.config.BeanDefinition;
+import com.shuxiang.summer.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
 
@@ -16,6 +19,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
         Object newInstance = null;
         try {
             newInstance = createBeanInstance(beanDefinition,beanName,args);
+            applyPropertyValues(beanName,newInstance,beanDefinition);
         } catch (Exception e){
             throw new BeansException("Instantiation of bean failed", e);
         }
@@ -23,6 +27,30 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
 
         addSingleton(beanName,newInstance);
         return newInstance;
+    }
+
+    protected void applyPropertyValues(String beanName, Object newInstance, BeanDefinition beanDefinition) {
+
+        try{
+            for(PropertyValue pv:beanDefinition.getPropertyValues()){
+                String fieldName = pv.getName();
+                Object value = pv.getValue();
+
+                if(value instanceof BeanReference){
+                    BeanReference beanReference = (BeanReference) value;
+                    value = getBean(beanReference.getBeanName());
+
+                }
+
+                BeanUtil.setFieldValue(newInstance,fieldName,value);
+            }
+        } catch (Exception e){
+            throw new BeansException("Error setting property values：" + beanName,e);
+        }
+
+
+
+
     }
 
     protected Object createBeanInstance(BeanDefinition beanDefinition, String beanName, Object[] args) {
@@ -40,5 +68,9 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
 
     public InstantiationStrategy getInstantiationStrategy() {
         return instantiationStrategy;
+    }
+
+    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
+        this.instantiationStrategy = instantiationStrategy;
     }
 }

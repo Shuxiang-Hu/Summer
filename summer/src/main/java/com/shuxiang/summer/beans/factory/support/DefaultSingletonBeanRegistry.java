@@ -1,9 +1,11 @@
-package com.shuxiang.summer.beans.factory.config;
+package com.shuxiang.summer.beans.factory.support;
+
+import com.shuxiang.summer.beans.factory.config.SingletonBeanRegistry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry{
+public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
     private Map<String,Object> singletonObjects = new ConcurrentHashMap<>();
     @Override
