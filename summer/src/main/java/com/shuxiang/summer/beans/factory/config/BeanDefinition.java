@@ -23,7 +23,7 @@ public class BeanDefinition {
         return beanClass;
     }
 
-    public PropertyValue[] getPropertyValues() {
-        return propertyValues.getPropertyValues();
+    public PropertyValues getPropertyValues() {
+        return propertyValues;
     }
 }

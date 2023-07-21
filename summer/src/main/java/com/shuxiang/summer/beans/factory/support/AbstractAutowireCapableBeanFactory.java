@@ -32,7 +32,7 @@ public abstract  class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
     protected void applyPropertyValues(String beanName, Object newInstance, BeanDefinition beanDefinition) {
 
         try{
-            for(PropertyValue pv:beanDefinition.getPropertyValues()){
+            for(PropertyValue pv:beanDefinition.getPropertyValues().getPropertyValues()){
                 String fieldName = pv.getName();
                 Object value = pv.getValue();
 
