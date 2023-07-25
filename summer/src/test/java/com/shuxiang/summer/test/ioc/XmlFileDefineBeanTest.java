@@ -1,4 +1,4 @@
-package com.shuxiang.summer.test;
+package com.shuxiang.summer.test.ioc;
 
 import com.shuxiang.summer.beans.factory.support.DefaultListableBeanFactory;
 import com.shuxiang.summer.beans.factory.xml.XmlBeanDefinitionReader;

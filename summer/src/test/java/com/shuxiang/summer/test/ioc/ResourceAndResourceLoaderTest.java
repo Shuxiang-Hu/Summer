@@ -1,4 +1,4 @@
-package com.shuxiang.summer.test;
+package com.shuxiang.summer.test.ioc;
 
 import cn.hutool.core.io.IoUtil;
 import com.shuxiang.summer.core.io.DefaultResourceLoader;

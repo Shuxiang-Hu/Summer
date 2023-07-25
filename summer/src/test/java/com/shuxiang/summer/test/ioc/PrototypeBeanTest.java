@@ -1,4 +1,4 @@
-package com.shuxiang.summer.test;
+package com.shuxiang.summer.test.ioc;
 
 import com.shuxiang.summer.context.support.ClassPathXmlApplicationContext;
 import com.shuxiang.summer.test.bean.Car;
