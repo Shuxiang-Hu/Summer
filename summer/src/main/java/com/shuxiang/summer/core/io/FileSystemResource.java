@@ -1,34 +1,29 @@
 package com.shuxiang.summer.core.io;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 
 public class FileSystemResource implements Resource {
 
-    private final File file;
+	private final String filePath;
 
-    private final String path;
+	public FileSystemResource(String filePath) {
+		this.filePath = filePath;
+	}
 
-    public FileSystemResource(File file) {
-        this.file = file;
-        this.path = file.getPath();
-    }
+	@Override
+	public InputStream getInputStream() throws IOException {
 
-    public FileSystemResource(String path) {
-        this.file = new File(path);
-        this.path = path;
-    }
-
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return Files.newInputStream(this.file.toPath());
-    }
-
-    public final String getPath() {
-        return this.path;
-    }
-
+		try {
+			Path path = new File(this.filePath).toPath();
+			return Files.newInputStream(path);
+		} catch (NoSuchFileException ex) {
+			throw new FileNotFoundException(ex.getMessage());
+		}
+	}
 }

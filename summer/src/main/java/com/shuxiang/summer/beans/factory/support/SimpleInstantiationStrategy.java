@@ -7,27 +7,18 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class SimpleInstantiationStrategy implements InstantiationStrategy{
-
-
-    /**
-     * create instance using the constructor specified,
-     * use default no arg constructor otherwise
-     */
-
     @Override
-    public Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor ctor, Object[] args) {
+    public Object instantiate(BeanDefinition beanDefinition) throws BeansException {
         Class beanClass = beanDefinition.getBeanClass();
+        Object bean = null;
         try {
-            if(ctor != null){
-                return beanClass.getDeclaredConstructor(ctor.getParameterTypes()).newInstance(args);
-            } else {
-                return beanClass.newInstance();
-            }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                NoSuchMethodException e) {
-            throw new BeansException("Failed to instantiate [" + beanClass.getName() + "]", e);
+            Constructor constructor = beanClass.getDeclaredConstructor();
+            return constructor.newInstance();
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            throw new BeansException("Creat bean of type  " + beanClass.getName() + " failed",e);
+
         }
+
+
     }
-
-
 }

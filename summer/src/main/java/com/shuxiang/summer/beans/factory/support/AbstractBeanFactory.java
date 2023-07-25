@@ -1,49 +1,75 @@
 package com.shuxiang.summer.beans.factory.support;
 
 import com.shuxiang.summer.beans.BeansException;
+import com.shuxiang.summer.beans.factory.FactoryBean;
 import com.shuxiang.summer.beans.factory.config.BeanDefinition;
-import com.shuxiang.summer.beans.factory.BeanFactory;
+import com.shuxiang.summer.beans.factory.config.BeanPostProcessor;
+import com.shuxiang.summer.beans.factory.config.ConfigurableBeanFactory;
 
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory{
+    private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    private final Map<String, Object> factoryBeanObjectCache = new HashMap<>();
+
     @Override
     public Object getBean(String beanName) {
-        return doGetBean(beanName,null);
+        Object singleton = getSingleton(beanName);
+        if(singleton != null){
+            return getObjectForBeanInstance(singleton,beanName);
+        }
+        BeanDefinition beanDefinition = getBeanDefinition(beanName);
+
+        return getObjectForBeanInstance(createBean(beanName,beanDefinition),beanName);
     }
-
-    @Override
-    public Object getBean(String beanName, Object... args) throws BeansException {
-        return doGetBean(beanName,args);
-    }
-
-
 
     @Override
     public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
-        return (T) getBean(name);
+        return ((T) getBean(name));
     }
+    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition) throws BeansException;
 
-
-
-    protected <T> T doGetBean(final String name, final Object[] args) {
-        Object bean = getSingleton(name);
-        if (bean != null) {
-            return (T) bean;
-        }
-
-        BeanDefinition beanDefinition = getBeanDefinition(name);
-        return (T) createBean(name, beanDefinition, args);
-    }
-
-    /**
-     * Get bean definition from a bean name
-     **/
     protected abstract BeanDefinition getBeanDefinition(String beanName) throws BeansException;
 
-    /**
-     * ceate object from bean definition and give it a name
-     * @param beanName name for the bean
-     * @param beanDefinition definition for the bean
-     * @throws BeansException exception related to bean
-     */
-    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException;
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        this.beanPostProcessors.remove(beanPostProcessor);
+        this.beanPostProcessors.add(beanPostProcessor);
+    }
+
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessors;
+    }
+
+
+    protected Object getObjectForBeanInstance(Object beanInstance, String beanName) {
+        if(!(beanInstance instanceof FactoryBean)){
+            return beanInstance;
+        }
+        FactoryBean factoryBean = (FactoryBean) beanInstance;
+        Object object;
+        try {
+            if(factoryBean.isSingleton()){
+                object = this.factoryBeanObjectCache.get(beanName);
+                if(object == null){
+
+                    object = factoryBean.getObject();
+                    this.factoryBeanObjectCache.put(beanName,object);
+
+                }
+            } else{
+                object = factoryBean.getObject();
+            }
+        } catch (Exception ex){
+            throw new BeansException("FactoryBean threw exception on object[" + beanName + "] creation", ex);
+        }
+
+
+
+        return object;
+    }
 }

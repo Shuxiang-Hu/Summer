@@ -4,22 +4,22 @@ import com.shuxiang.summer.beans.BeansException;
 
 import java.util.Map;
 
-public interface ListableBeanFactory extends BeanFactory{
+public interface ListableBeanFactory extends BeanFactory {
 
-    /**
-     * 按照类型返回 Bean 实例
-     * @param type
-     * @param <T>
-     * @return
-     * @throws BeansException
-     */
-    <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException;
+	/**
+	 * 返回指定类型的所有实例
+	 *
+	 * @param type
+	 * @param <T>
+	 * @return
+	 * @throws BeansException
+	 */
+	<T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException;
 
-    /**
-     * Return the names of all beans defined in this registry.
-     *
-     * 返回注册表中所有的Bean名称
-     */
-    String[] getBeanDefinitionNames();
-
+	/**
+	 * 返回定义的所有bean的名称
+	 *
+	 * @return
+	 */
+	String[] getBeanDefinitionNames();
 }

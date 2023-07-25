@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>summer</module>
-        <module>demo</module>
     </modules>
 
     <properties>

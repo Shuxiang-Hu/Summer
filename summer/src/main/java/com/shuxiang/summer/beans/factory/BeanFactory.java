@@ -6,9 +6,8 @@ public interface BeanFactory {
 
 
 
-    public Object getBean(String beanName) throws BeansException;
 
-    public Object getBean(String beanName, Object ... args) throws BeansException;
+   Object getBean(String beanName);
 
-    public <T> T getBean(String name, Class<T> requiredType) throws BeansException;
+    <T> T getBean(String name, Class<T> requiredType) throws BeansException;
 }
